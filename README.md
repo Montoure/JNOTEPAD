@@ -12,7 +12,8 @@ HOW TO OPEN PROGRAMM
 }
 2) Works on any System {
     * java -jar jnotepad.jar [args]
-    * java -classpath bin src.Main [args]\  
+    * java -classpath bin src.Main [args]<br>
+    <br>
 }
 
 HOW TO BUILD PROGRAMM IF YOU MODEFIED IT
