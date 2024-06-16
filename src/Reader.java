@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Reader {
     private String filename;
-    private Scanner reader = new Scanner(System.in);
+    private Scanner reader = new Scanner("");
     public void open(String filename) throws ReadException {
         try {
             this.filename = filename;
