@@ -8,12 +8,12 @@ HOW TO OPEN PROGRAMM
 --------------------
 1) If you have Linux {
     1. chmod +x jnotepad.jar
-    2. ./jnotepad.jar [args]  
+    2. ./jnotepad.jar [args]
 }
 2) Works on any System {
     * java -jar jnotepad.jar [args]
-    * java -classpath bin src.Main [args]  
-}
+    * java -classpath bin src.Main [args]
+    }
 
 HOW TO BUILD PROGRAMM IF YOU MODEFIED IT
 ----------------------------------------
