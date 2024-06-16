@@ -13,7 +13,7 @@ HOW TO OPEN PROGRAMM
 2) Works on any System {
     * java -jar jnotepad.jar [args]
     * java -classpath bin src.Main [args]\
-}
+\}
 
 HOW TO BUILD PROGRAMM IF YOU MODEFIED IT
 ----------------------------------------
