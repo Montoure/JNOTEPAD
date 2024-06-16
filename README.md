@@ -16,7 +16,7 @@ HOW TO OPEN PROGRAMM
 HOW TO BUILD PROGRAMM IF YOU MODEFIED IT
 ----------------------------------------
 1) javac -classpath bin src.Main
-2) Check file manifest.mf ( see  **HOW FILE manifest.mf SHOULD TO LOOKS** ) \
+2) Check file manifest.mf ( see  **HOW FILE manifest.mf SHOULD TO LOOKS** )
 3) jar -cmf manifest.mf jnotepad.jar -C bin .
 
 HOW FILE manifest.mf SHOULD TO LOOKS
