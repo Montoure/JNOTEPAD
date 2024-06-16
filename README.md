@@ -10,13 +10,16 @@ HOW TO OPEN PROGRAMM
     1. chmod +x jnotepad.jar
     2. ./jnotepad.jar [args]
 2) Works on any System
-    - java -jar jnotepad.jar [args]
-    - java -classpath bin src.Main [args]
+    * java -jar jnotepad.jar [args]
+    * java -classpath bin src.Main [args]
 
 HOW TO BUILD PROGRAMM IF YOU MODEFIED IT
 ----------------------------------------
 1) javac -classpath bin src.Main
-2) Check file manifest.mf\
-    main-class: src.Main\
-    class-path: bin
+2) Check file manifest.mf ( see  *HOW FILE manifest.mf SHOULD TO LOOKS* ) \
 3) jar -cmf manifest.mf jnotepad.jar -C bin .
+
+HOW FILE manifest.mf SHOULD TO LOOKS
+----------------------------------------
+1) main-class: src.Main
+2) class-path: bin
