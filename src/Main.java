@@ -3,8 +3,8 @@ package src;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
-import src.FileWork.ReturnValues;
 
 class Utils {
     public static ArrayList<String> split(String str) {
@@ -36,18 +36,75 @@ class FileWork {
     private final Scanner IN = new Scanner(System.in);
     private int index = 0;
     private boolean SAVED = true;
+    private final ArrayList<String> helps = new ArrayList<>(
+        Arrays.asList(
+                ">print_all< - show all text",
+                ">clear< - clear screen",
+                ">quit< | >exit< - exit from program",
+                ">open< - open file",
+                ">save< - save text to file",
+                ">save_exit< - save text to file and exit from programm",
+                ">save_as< - save text to other file",
+                ">gcl< - print current line",
+                ">rcl< - remove current line ( don't clear line )",
+                ">set_empty< - remove all lines",
+                ">nextl< - move cursor to next line",
+                ">to_INT< - move cursor to line at number INT ( starts at 0, ends at count of lines - 1 )",
+                ">help< - show help text"
+        )
+    );
     public enum ReturnValues {
         Allright,
         Error,
         Exit
     }
+
+    public void Open(String file) {
+        if (this.filename != null | !this.lines.isEmpty()) {
+            System.err.print("Are you sure?(y/n): ");
+            String choice = this.IN.nextLine();
+            if (!choice.equals("y"))
+                return;
+        }
+
+        try {
+            this.file_read.open(file);
+            this.filename = file;
+            this.lines = this.file_read.read();
+            this.index = 0;
+            this.SAVED = true;
+        } catch (ReadException error) {
+            System.out.println("[!] " + error);
+        }
+    }
+
+    public void Open() {
+        if (this.filename != null | !this.lines.isEmpty()) {
+            System.err.print("Are you sure?(y/n): ");
+            String choice = this.IN.nextLine();
+            if (!choice.equals("y"))
+                return;
+        }
+
+        System.out.print("Enter filename for open: ");
+        try {
+            String file = this.IN.nextLine();
+            this.file_read.open(file);
+            this.filename = file;
+            this.lines = this.file_read.read();
+            this.index = 0;
+            this.SAVED = true;
+        } catch (ReadException error) {
+            System.out.println("[!] " + error);
+        }
+    }
+
     public void SaveData(String filename) {
         boolean empty_filename = false;
         if (filename == null) {
             empty_filename = true;
-            System.out.print("Enter filename for save: ");
-            filename = this.IN.nextLine();
-            this.filename = filename;
+            Open();
+            filename = this.filename;
         }
         try (FileWriter filewrite = new FileWriter(filename)) {
             for (int i = 0; i < this.lines.size(); i++) {
@@ -64,8 +121,8 @@ class FileWork {
                 } catch (ReadException error) {
                     System.out.println("[!] " + error);
                 }
-            }
-            this.SAVED = true;
+            } else
+                this.SAVED = true;
         } catch (IOException error) {
             System.out.println(error);
         }
@@ -81,18 +138,8 @@ class FileWork {
     public ReturnValues HandlerCommand(String command) {
         ArrayList<String> underscore_split = Utils.split(command, '_');
         if (command.equals(">help<")) {
-            System.out.println(">print_all< - show all text");
-            System.out.println(">clear< - clear screen");
-            System.out.println(">quit< | >exit< - exit from program");
-            System.out.println(">save< - save text to file");
-            System.out.println(">save_exit< - save text to file and exit from programm");
-            System.out.println(">save_as< - save text to other file");
-            System.out.println(">gcl< - print current line");
-            System.out.println(">rcl< - remove current line ( don't clear line )");
-            System.out.println(">set_empty< - remove all lines");
-            System.out.println(">nextl< - move cursor to next line");
-            System.out.println(">to_INT< - move cursor to line at number INT ( starts at 0, ends at count of lines - 1 )");
-            System.out.println(">help< - show help text");
+            for (String str : this.helps)
+                System.out.println(str);
         } else if (command.equals(">print_all<")) {
                 System.out.println("--------");
                 System.out.println("TEXT");
@@ -109,13 +156,15 @@ class FileWork {
         } else if (command.equals(">clear<")) {
                 System.out.print("\033[H\033[2J");
                 System.out.flush();
-        } else if (command.equals(">quit<") || command.equals(">exit<")) {
-                if (SAVED)
+        } else if (command.equals(">quit<") | command.equals(">exit<")) {
+                if (this.SAVED)
                     return ReturnValues.Exit;
                 System.out.print("Are you sure?(y/n): ");
                 String choice = this.IN.nextLine();
                 if (choice.equals("y"))
                     return ReturnValues.Exit;
+        } else if (command.equals(">open<")) {
+            Open();
         } else if (command.equals(">save<")) {
             SaveData(this.filename);
         } else if (command.equals(">save_exit<")) {
@@ -153,11 +202,13 @@ class FileWork {
                     }
                     arg = arg.replace("<", "");
                     int new_index = Integer.parseInt(arg);
-                    if (new_index > this.lines.size()-1 || new_index < 0) {
-                        System.out.println("[!] Out of range.");
+                    try {
+                        this.lines.get(new_index);
+                        this.index = new_index;
+                    } catch (IndexOutOfBoundsException error) {
+                        System.out.println("[!] " + error);
                         return ReturnValues.Error;
                     }
-                    this.index = new_index;
                     System.out.println("Line: " + this.lines.get(this.index));
                     break;
                 }
@@ -171,48 +222,41 @@ class FileWork {
         return ReturnValues.Allright;
     }
 
-    public void Run(String filename) {
-        this.filename = filename;
-        try {
-            if (filename != null) {
-                this.file_read.open(this.filename);
-                this.lines = this.file_read.read();
-            } else
-                this.lines.add("");
-            this.index = 0;
-            System.out.println("Line: " + this.lines.get(this.index));
-            boolean exit = false;
-            while (!exit) {
-                System.out.print(":");
-                switch (HandlerCommand(this.IN.nextLine())) {
-                    case Allright, Error -> {
-                    }
-                    default -> exit = true;
+    public void Run(String file) {
+        if (file != null) {
+            Open(file);
+            this.filename = file;
+        } else
+            this.lines.add("");
+
+        this.index = 0;
+        System.out.println("Line: " + this.lines.get(this.index));
+        boolean exit = false;
+
+        while (!exit) {
+            System.out.print(":");
+            switch (HandlerCommand(this.IN.nextLine())) {
+                case Allright, Error -> {
                 }
+                default -> exit = true;
             }
-        } catch (ReadException | ArrayIndexOutOfBoundsException error) {
+        }
+
+        try {
+            this.IN.close();
+            this.file_read.close();
+        } catch (ReadException error) {
             System.out.println(error);
-        } finally {
-            try {
-                this.IN.close();
-                this.file_read.close();
-            } catch (ReadException error) {
-                System.out.println(error);
-            }
         }
     }
 }
 
 public class Main {
-    public static void main(String[] args) throws ReadException {
+    public static void main(String[] args) {
         FileWork run = new FileWork();
-        try {
-            if (args.length != 0)
-                run.Run(args[0]);
-            else
-                run.Run(null);
-        } catch (Exception error) {
-            System.out.println(error);
-        }
+        if (args.length != 0)
+            run.Run(args[0]);
+        else
+            run.Run(null);
     }
 }
