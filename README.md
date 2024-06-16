@@ -19,7 +19,7 @@ HOW TO BUILD PROGRAMM IF YOU MODEFIED IT
 ----------------------------------------
 1) javac -classpath bin src.Main
 2) Check file manifest.mf {
-    main-class: src.Main
+    main-class: src.Main<br>
     class-path: bin
 }
 3) jar -cmf manifest.mf jnotepad.jar -C bin .
