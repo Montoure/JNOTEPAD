@@ -1,7 +1,7 @@
 # JNOTEPAD
-Welcome! This is simple notepad in Java.
-First, what you should know, commands should be written like this - ">command<".
-Second - help command is ">help<".
+Welcome! This is simple notepad in Java.\
+First, what you should know, commands should be written like this - ">command<".\
+Second - help command is ">help<".\
 I hope, you will understand.
 
 HOW TO OPEN PROGRAMM
